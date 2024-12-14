@@ -23,7 +23,7 @@
 module Execute #(parameter width=32)(
 input [1:0] ALUOp,
 input ALUSrc,
-input [width-1:0] rd1,rd2,inst,immOut,nxt_pc,
+input [width-1:0] rd1,rd2,inst,immOut,curr_pc,
 output [width-1:0] ALUOut,immAddress,
 output zero
     );
@@ -64,7 +64,7 @@ ShiftLeftOne m_ShiftLeftOne(
 );
 
 Adder m_Adder_2(
-    .a(nxt_pc),
+    .a(curr_pc),
     .b(shiftOut),
     .sum(immAddress)
 );

@@ -30,18 +30,18 @@ wire PC_Mux_Sel;
 PC main_PC(
 .clk(clk),
 .rst(start),
-.pc_i(curr_pc),
-.pc_o(nxt_pc)
+.pc_i(nxt_pc),
+.pc_o(curr_pc)
 );
 
 Adder Pc_adder(
-.a(nxt_pc),
+.a(curr_pc),
 .b(32'h4),
 .sum(pc_plus4)
 );
 
 InstructionMemory IM(
-.readAddr(nxt_pc),
+.readAddr(curr_pc),
 .inst(inst_out)
 );
 
@@ -51,7 +51,7 @@ Mux2to1 #(.size(32)) m_Mux_PC(
     .sel(PC_Mux_Sel),
     .s0(pc_plus4),
     .s1(immAddress),
-    .out(curr_pc)
+    .out(nxt_pc)
 );
 
 endmodule

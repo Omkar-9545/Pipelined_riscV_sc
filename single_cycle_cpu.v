@@ -67,7 +67,7 @@ Execute eunit(
 .rd2(rd2),
 .inst(inst),
 .immOut(immOut),
-.nxt_pc(nxt_pc),
+.curr_pc(curr_pc),
 .ALUOut(ALUOut),
 .immAddress(immAddress),
 .zero(zero)
