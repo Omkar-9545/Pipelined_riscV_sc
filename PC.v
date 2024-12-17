@@ -23,15 +23,18 @@
 module PC(
     input clk,
     input rst,
+    input stall,
     input [31:0] pc_i,
     output reg [31:0] pc_o
 );
 
 always @(posedge clk or negedge rst) begin
-	if (~rst)
+	if (rst==1'b0)
 		pc_o <=32'b0;
-	else
-		pc_o <= pc_i;    
+	else if(stall ==1'b0 && rst==1'b1)
+	   pc_o <= pc_i;    
+	else if(stall==1'b1)
+	   pc_o <= pc_o;
 end
 endmodule
 
