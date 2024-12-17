@@ -22,14 +22,13 @@
 
 module Execute #(parameter width=32)(
 input [1:0] ALUOp,
-input ALUSrc,
-input [width-1:0] rd1,rd2,inst,immOut,curr_pc,
+input ALUSrc,funct7,
+input [2:0] funct3,
+input [width-1:0] rd1,rd2,immOut,curr_pc,
 output [width-1:0] ALUOut,immAddress,
 output zero
     );
-
-wire funct7;
-wire [2:0] funct3;
+    
 wire [3:0] ALUCtl;
 wire [31:0] Operand2,shiftOut;
 
@@ -39,9 +38,6 @@ Mux2to1 #(.size(32)) m_Mux_ALU(
     .s1(immOut),
     .out(Operand2)
 );
-
-assign funct7 = inst[30];
-assign funct3 = inst[14:12];
 
 ALUCtrl m_ALUCtrl(
     .ALUOp(ALUOp),

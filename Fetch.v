@@ -21,17 +21,21 @@
 
 
 module Fetch #(parameter width=32)(
-input clk,start,branch,zero,
+input clk,start,branch,zero,stall,
 input [width-1:0] immAddress,curr_pc,
-output [width-1:0] inst_out,nxt_pc,pc_plus4);
+output  [31:0] nxt_pc,
+output [width-1:0] inst_out,pc_plus4,
+output PC_Mux_Sel);
 
-wire PC_Mux_Sel;
+//wire PC_Mux_Sel;
+reg temp;
 
 PC main_PC(
 .clk(clk),
 .rst(start),
 .pc_i(nxt_pc),
-.pc_o(curr_pc)
+.pc_o(curr_pc),
+.stall(stall)
 );
 
 Adder Pc_adder(
@@ -45,7 +49,12 @@ InstructionMemory IM(
 .inst(inst_out)
 );
 
-assign PC_Mux_Sel = branch & zero;
+always@(posedge clk or branch or zero) begin
+    if(branch==1'b0 || branch===1'bx) temp=1'b0;
+    else if(branch==1'b1 && zero==1'b1) temp= 1'b1;
+end
+
+assign PC_Mux_Sel = temp;
 
 Mux2to1 #(.size(32)) m_Mux_PC(
     .sel(PC_Mux_Sel),
