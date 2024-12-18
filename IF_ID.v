@@ -30,7 +30,7 @@ output reg [31:0] inst_out,curr_pc
     begin
         if(flush==1'b1) begin
             inst_out <= 32'b0;
-            curr_pc <= curr_pc_val;
+            curr_pc <= 32'b0;
         end
         else if (stall==1'b0) 
             begin

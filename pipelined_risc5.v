@@ -21,12 +21,12 @@
 
 
 module pipelined_risc5 #(parameter width=32)(
-input start,clk,stall,
+input start,clk,
 
 output [width-1:0] nxt_pc,inst_out,
 
 output  [31:0] curr_pc_out,rd2_out,rd1_out,immOut_reg,
-output  PC_Mux_Sel,
+output  PC_Mux_Sel,stall,
 
 output zero_out,branch_out,memRead_out,memWrite_out,
 output [31:0] immAddress_out,rd2_out_reg,
@@ -46,12 +46,15 @@ wire [1:0] ALUOp;
 wire [4:0]  readReg1,readReg2,writeReg;
 wire [2:0] funct3_out;
 
+//the output of the hazard detection unit
+//wire stall;
+
 //used in the execute stage
 wire [1:0] ALUOp_out,ALUSrc_out;
 
 //stage 3 execute output signals going into the EX/MEM reg
 wire [31:0] immAddress_in,ALUOut;
-wire zero_in,branch_reg,memRead_reg,memtoReg_reg,memWrite_reg,regWrite_reg;
+wire zero_in,branch_reg,memtoReg_reg,memWrite_reg,regWrite_reg,memRead_reg;
 wire [4:0] write_reg_out;
 
 //stage 4 mem output signals going into the MEM/WB reg
@@ -90,6 +93,7 @@ Decode dunit(
 .wb_data(wb_data),
 .start(start),
 .clk(clk),
+.stall(stall),
 .branch(branch),
 .memRead(memRead),
 .memtoReg(memtoReg),
@@ -102,7 +106,9 @@ Decode dunit(
 .rd2(rd2),
 .readReg1(readReg1),
 .readReg2(readReg2),
-.writeReg(writeReg)
+.writeReg(writeReg),
+.rd(rd_fin),
+.rw(regWrite_fin)
     );
 
 ID_EX idexreg(
