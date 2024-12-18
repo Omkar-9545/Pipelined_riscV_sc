@@ -22,6 +22,7 @@
 
 module Control(
     input [6:0] opcode,
+    input stall,
     output  branch,
     output  memRead,
     output  memtoReg,
@@ -47,5 +48,6 @@ module Control(
     7'b0010011: controlLines <= 8'b00001111; //I-type
     default : controlLines <= 8'b00000000; //nop
     endcase
+    if(stall==1'b1) controlLines <= 8'b00000000;
     end
 endmodule
